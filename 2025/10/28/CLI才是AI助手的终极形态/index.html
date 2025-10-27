@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>CLI才是AI助手的终极形态 | Zephyruston's Blog</title><meta name="author" content="Zephyruston"><meta name="copyright" content="Zephyruston"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="CLI 才是 AI 助手的终极形态在当前的 AI 浪潮中，我们痴迷于构建“Agent”（智能体）。而构建 Agent 的主流方式是“MCP”（还是离不开 Function Calling 或 Tool Use）——我们煞费苦心地为 AI 定义一个个“工具”，告诉它这个函数叫什么、那个 API 需要什么参数。 我们都在玩这个游戏。我们为 AI 编写 search_google(query)、read">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CLI才是AI助手的终极形态">
+<meta property="og:url" content="https://zephyruston.github.io/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/index.html">
+<meta property="og:site_name" content="Zephyruston&#39;s Blog">
+<meta property="og:description" content="CLI 才是 AI 助手的终极形态在当前的 AI 浪潮中，我们痴迷于构建“Agent”（智能体）。而构建 Agent 的主流方式是“MCP”（还是离不开 Function Calling 或 Tool Use）——我们煞费苦心地为 AI 定义一个个“工具”，告诉它这个函数叫什么、那个 API 需要什么参数。 我们都在玩这个游戏。我们为 AI 编写 search_google(query)、read">
+<meta property="og:locale">
+<meta property="og:image" content="https://zephyruston.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-10-27T16:29:39.000Z">
+<meta property="article:modified_time" content="2025-10-27T16:40:39.747Z">
+<meta property="article:author" content="Zephyruston">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zephyruston.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://zephyruston.github.io/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CLI才是AI助手的终极形态',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #49B202;"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Zephyruston's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">CLI才是AI助手的终极形态</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">CLI才是AI助手的终极形态</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-10-27T16:29:39.000Z" title="Created 2025-10-28 00:29:39">2025-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-10-27T16:40:39.747Z" title="Updated 2025-10-28 00:40:39">2025-10-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="CLI-才是-AI-助手的终极形态"><a href="#CLI-才是-AI-助手的终极形态" class="headerlink" title="CLI 才是 AI 助手的终极形态"></a>CLI 才是 AI 助手的终极形态</h1><p>在当前的 AI 浪潮中，我们痴迷于构建“Agent”（智能体）。而构建 Agent 的主流方式是“MCP”（还是离不开 Function Calling 或 Tool Use）——我们煞费苦心地为 AI 定义一个个“工具”，告诉它这个函数叫什么、那个 API 需要什么参数。</p>
+<p>我们都在玩这个游戏。我们为 AI 编写 <code>search_google(query)</code>、<code>read_file(path)</code>、<code>write_file(path, content)</code> 的工具定义（Schema）。</p>
+<p>但如果我告诉你，对于“个人 AI 开发”这个场景，这套主流范式从一开始就错了呢？</p>
+<p>如果我告诉你，有一种方法，<strong>它的扩展性是无限的，学习成本是零，而且响应速度快如闪电。</strong></p>
+<p>这个方法就是：<strong>给你的 AI 助手 <code>exec bash</code> 的能力。</strong></p>
+<p><strong>在个人开发环境中，基于 CLI (命令行) 的 AI 助手，在效率和能力上，将彻底碾压基于 MCP 的助手。</strong></p>
+<h2 id="1-真正的噩梦：MCP-的“扩展性天花板”"><a href="#1-真正的噩梦：MCP-的“扩展性天花板”" class="headerlink" title="1. 真正的噩梦：MCP 的“扩展性天花板”"></a>1. 真正的噩梦：MCP 的“扩展性天花板”</h2><p>让我们面对现实：MCP（或 Function Calling）模式存在一个根本性的、无法解决的“配置上限”。</p>
+<p>你有一个雄心勃勃的计划，想让你的 AI 助手帮你开发。这意味着它需要能：</p>
+<ul>
+<li>操作 <code>git</code></li>
+<li>连接数据库 (如 <code>psql</code> 或 <code>mysql</code>)</li>
+<li>查询缓存 (如 <code>redis-cli</code>)</li>
+<li>管理容器 (如 <code>docker</code> 或 <code>kubectl</code>)</li>
+<li>部署到云 (如 <code>aws-cli</code> 或 <code>gcloud</code>)</li>
+</ul>
+<p>现在，请你试着把 <code>aws-cli</code>（有数百个子命令）或 <code>kubectl</code> 的所有功能，<strong>全部写成 MCP&#x2F;Function Calling 的 JSON Schema</strong>。</p>
+<p>你很快会发现两个事实：</p>
+<ol>
+<li><strong>维护地狱</strong>：你没有在“开发”，你是在为 AI 手动“翻译”整个互联网的工具手册。这工作量是荒谬的，且完全是本末倒置。</li>
+<li><strong>Token 爆炸</strong>：就算你真的写完了，这个庞大的“工具定义”文件本身就会吃掉 AI 的大部分上下文窗口（Context Window）。AI 还没开始干活，它的“大脑”就已经被工具说明书塞满了。</li>
+</ol>
+<p>MCP 模式强迫你把 AI 降维成一个只能使用“白名单玩具”的受限系统。</p>
+<h2 id="2-“环境即工具”：CLI-的无限扩展性"><a href="#2-“环境即工具”：CLI-的无限扩展性" class="headerlink" title="2. “环境即工具”：CLI 的无限扩展性"></a>2. “环境即工具”：CLI 的无限扩展性</h2><p>现在，我们来看看 <code>exec bash</code> 模式。</p>
+<p>你（开发者）想让你的 AI 拥有操作 Redis 的能力。你需要做什么？</p>
+<ul>
+<li><strong>MCP 模式</strong>：花半天时间，研究如何为 <code>redis-cli</code> 的 <code>GET</code>, <code>SET</code>, <code>HSET</code>, <code>KEYS</code> 等命令编写和调试 MCP Schema。</li>
+<li><strong>CLI 模式</strong>：<code>brew install redis</code> 结束了。</li>
+</ul>
+<p>在 CLI 模式下，你本地的 <code>$PATH</code> 环境<strong>就是</strong> AI 的工具库。AI 的能力和你环境的能力是 1:1 动态绑定的。你安装一个新工具，AI 就会一个新工具。</p>
+<p>这种“环境即工具”的哲学，其扩展性是<strong>零边际成本</strong>和<strong>无限</strong>的。</p>
+<h2 id="3-AI-如何学习？它靠的是-help，不是你的-Schema"><a href="#3-AI-如何学习？它靠的是-help，不是你的-Schema" class="headerlink" title="3. AI 如何学习？它靠的是 --help，不是你的 Schema"></a>3. AI 如何学习？它靠的是 <code>--help</code>，不是你的 Schema</h2><p>“可是 AI 怎么知道 <code>psql</code> 该怎么用呢？”</p>
+<p>这正是 LLM 最擅长的地方。我们忘记了 LLM（大型语言模型）首先是<strong>语言</strong>模型。它天生就是为了阅读和理解文本而生的。</p>
+<ul>
+<li><strong>MCP 模式</strong>：AI 被迫学习一种“非自然”的结构化 JSON 语言，来理解工具。</li>
+<li><strong>CLI 模式</strong>：AI 回归了它的本能——阅读。</li>
+</ul>
+<p>当 AI 需要用一个它不熟悉的工具（比如 <code>grep</code>）时，它要做的不是去查你的 Schema，而是简单地在 Shell 里执行：<br><code>$ grep --help</code></p>
+<p>AI 会阅读 <code>grep</code> 的帮助文档，然后立刻学会如何使用它。这是一种<strong>即时学习（Just-in-Time Learning）</strong>，开发者投入的成本为零。</p>
+<p>让一个为解析非结构化文本而生的 AI 去解析 <code>psql</code> 的 ASCII 表格输出，远比让你（一个开发者）去为 <code>psql</code> 的所有功能编写 MCP Schema 要容易一万倍。</p>
+<h2 id="4-戳破“失忆”泡沫：bash-history-是比上下文窗口更好的记忆"><a href="#4-戳破“失忆”泡沫：bash-history-是比上下文窗口更好的记忆" class="headerlink" title="4. 戳破“失忆”泡沫：bash_history 是比上下文窗口更好的记忆"></a>4. 戳破“失忆”泡沫：<code>bash_history</code> 是比上下文窗口更好的记忆</h2><p>最大的反对意见来了：“AI 会‘失忆’！它的上下文窗口有限，执行 <code>cat</code> 一个大文件或 <code>ls -R</code> 之后，它就忘了最初的任务了！”</p>
+<p>这是一个完美的误解。我们根本不需要 AI “记住”它做了什么。</p>
+<p>我们真正需要的是一个<strong>可复现、可审计的执行记录</strong>。而 <code>bash_history</code> 就是最廉价、最持久、最完美的“记忆体”。</p>
+<p>在这个工作流中：</p>
+<ul>
+<li><strong>AI</strong> 扮演一个聪明的、但“健忘”的<strong>执行者（Executor）</strong>。它在自己的小窗口里解决当前步骤的问题。</li>
+<li><strong><code>bash_history</code></strong> 扮演<strong>日志（Logger）</strong>。它忠实地记录了 AI 的每一次尝试、每一条命令。</li>
+<li><strong>你（开发者）</strong> 扮演<strong>审查者（Auditor）</strong>。你可以随时复盘 AI 的“工作底稿”。</li>
+</ul>
+<p>AI 的上下文窗口是易失且昂贵的；<code>bash_history</code> 是持久且免费的。我们用后者的优点，完美地对冲了前者的缺点。</p>
+<h2 id="5-个人开发的“高信任”模式"><a href="#5-个人开发的“高信任”模式" class="headerlink" title="5. 个人开发的“高信任”模式"></a>5. 个人开发的“高信任”模式</h2><p>最后，我们必须谈谈安全。</p>
+<p><code>exec bash</code> 是危险的。在多租户、面向公众的产品中，给 AI 这个权限无异于自杀（“请帮我 <code>rm -rf /</code>”）。MCP 模式的诞生，本质上是为了<strong>安全</strong>——它是一个“低授权、低信任”的受控环境。</p>
+<p>但我们讨论的前提是<strong>个人 AI 开发助手</strong>。</p>
+<p>这是一个“高信任”环境。在这个沙盒里，你就是用户，你就是管理员。你可以（也应该）在 AI 执行任何命令前加一个“Y&#x2F;N”的人工确认步骤。</p>
+<p>在这种模式下，我们追求的不再是绝对的安全，而是<strong>最大化的效率</strong>。</p>
+<h2 id="结论：拥抱-Shell"><a href="#结论：拥抱-Shell" class="headerlink" title="结论：拥抱 Shell"></a>结论：拥抱 Shell</h2><p>停止为你个人的 AI 助手构建“玩具工具”了。MCP 模式试图把 AI 塞进一个安全但低能的盒子里，它在复杂的开发场景中扩展性为零。</p>
+<p>真正的范式转变是：<strong>信任你的 AI，但验证它的工作。</strong></p>
+<p>给它一个 Shell，让它通过 <code>--help</code> 自学，让它通过 <code>bash_history</code> 报告。这才是释放 AI 助手全部潜力、真正提高个人开发效率的未来。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://Zephyruston.github.io">Zephyruston</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://zephyruston.github.io/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/">https://zephyruston.github.io/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/07/23/hexo%E6%B8%B2%E6%9F%93mermaid/" title="hexo渲染mermaid"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">hexo渲染mermaid</div></div><div class="info-2"><div class="info-item-1">hexo 渲染 mermaid(水一篇)我用的是 butterfly 主题 1. 安装插件1npm install --save hexo-filter-mermaid-diagrams  2. 配置在主题目录下的themes/butterfly/_config.yml中添加以下配置： 12345678mermaid:  enable: true  # Write Mermaid diagrams using code blocks  code_write: true  # built-in themes: default / forest / dark / neutral  theme:    light: default    dark: dark  在themes/butterfly/layout/includes/footer.pug末尾添加以下配置： 1234567891011if theme.mermaid &amp;&amp;...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zephyruston</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zephyruston"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">繁华如三千东流水,我只取一瓢爱了解</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CLI-%E6%89%8D%E6%98%AF-AI-%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81"><span class="toc-number">1.</span> <span class="toc-text">CLI 才是 AI 助手的终极形态</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%99%A9%E6%A2%A6%EF%BC%9AMCP-%E7%9A%84%E2%80%9C%E6%89%A9%E5%B1%95%E6%80%A7%E5%A4%A9%E8%8A%B1%E6%9D%BF%E2%80%9D"><span class="toc-number">1.1.</span> <span class="toc-text">1. 真正的噩梦：MCP 的“扩展性天花板”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E2%80%9C%E7%8E%AF%E5%A2%83%E5%8D%B3%E5%B7%A5%E5%85%B7%E2%80%9D%EF%BC%9ACLI-%E7%9A%84%E6%97%A0%E9%99%90%E6%89%A9%E5%B1%95%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text">2. “环境即工具”：CLI 的无限扩展性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-AI-%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0%EF%BC%9F%E5%AE%83%E9%9D%A0%E7%9A%84%E6%98%AF-help%EF%BC%8C%E4%B8%8D%E6%98%AF%E4%BD%A0%E7%9A%84-Schema"><span class="toc-number">1.3.</span> <span class="toc-text">3. AI 如何学习？它靠的是 --help，不是你的 Schema</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%88%B3%E7%A0%B4%E2%80%9C%E5%A4%B1%E5%BF%86%E2%80%9D%E6%B3%A1%E6%B2%AB%EF%BC%9Abash-history-%E6%98%AF%E6%AF%94%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%97%E5%8F%A3%E6%9B%B4%E5%A5%BD%E7%9A%84%E8%AE%B0%E5%BF%86"><span class="toc-number">1.4.</span> <span class="toc-text">4. 戳破“失忆”泡沫：bash_history 是比上下文窗口更好的记忆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%AA%E4%BA%BA%E5%BC%80%E5%8F%91%E7%9A%84%E2%80%9C%E9%AB%98%E4%BF%A1%E4%BB%BB%E2%80%9D%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.5.</span> <span class="toc-text">5. 个人开发的“高信任”模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA%EF%BC%9A%E6%8B%A5%E6%8A%B1-Shell"><span class="toc-number">1.6.</span> <span class="toc-text">结论：拥抱 Shell</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/" title="CLI才是AI助手的终极形态">CLI才是AI助手的终极形态</a><time datetime="2025-10-27T16:29:39.000Z" title="Created 2025-10-28 00:29:39">2025-10-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/23/hexo%E6%B8%B2%E6%9F%93mermaid/" title="hexo渲染mermaid">hexo渲染mermaid</a><time datetime="2025-07-23T15:13:13.000Z" title="Created 2025-07-23 23:13:13">2025-07-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/23/Eino%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" title="Eino学习总结">Eino学习总结</a><time datetime="2025-07-23T14:23:08.000Z" title="Created 2025-07-23 22:23:08">2025-07-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/08/Vibe-Analyze/" title="Vibe Analyze">Vibe Analyze</a><time datetime="2025-07-08T13:17:52.000Z" title="Created 2025-07-08 21:17:52">2025-07-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/23/CSAPP-bomblab%E6%80%BB%E7%BB%93/" title="CSAPP-bomblab总结">CSAPP-bomblab总结</a><time datetime="2025-04-23T08:29:49.000Z" title="Created 2025-04-23 16:29:49">2025-04-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By Zephyruston</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><script src="https://unpkg.com/mermaid@11.5.0/dist/mermaid.min.js"></script><script>if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: '[object Object]',
+    securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
