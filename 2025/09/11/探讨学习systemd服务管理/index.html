@@ -1,0 +1,237 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>探讨学习systemd服务管理 | Zephyruston's Blog</title><meta name="author" content="Zephyruston"><meta name="copyright" content="Zephyruston"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="探讨学习 systemd 服务管理核心就是三件事： 几个基础命令 - systemctl 和 journalctl 服务生命周期管理 - 安装、启用、启动、停止、卸载 读懂和编写 .service 文件 - 这是真正的精髓     重要习惯：当你创建新的单元文件或修改了任何单元文件后，必须让 systemd 重新加载其配置。  执行命令： 1sudo systemctl daemon-reload">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探讨学习systemd服务管理">
+<meta property="og:url" content="https://zephyruston.github.io/2025/09/11/%E6%8E%A2%E8%AE%A8%E5%AD%A6%E4%B9%A0systemd%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Zephyruston&#39;s Blog">
+<meta property="og:description" content="探讨学习 systemd 服务管理核心就是三件事： 几个基础命令 - systemctl 和 journalctl 服务生命周期管理 - 安装、启用、启动、停止、卸载 读懂和编写 .service 文件 - 这是真正的精髓     重要习惯：当你创建新的单元文件或修改了任何单元文件后，必须让 systemd 重新加载其配置。  执行命令： 1sudo systemctl daemon-reload">
+<meta property="og:locale">
+<meta property="og:image" content="https://zephyruston.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-09-11T12:04:47.000Z">
+<meta property="article:modified_time" content="2025-11-18T15:49:22.082Z">
+<meta property="article:author" content="Zephyruston">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zephyruston.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://zephyruston.github.io/2025/09/11/%E6%8E%A2%E8%AE%A8%E5%AD%A6%E4%B9%A0systemd%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '探讨学习systemd服务管理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #49B202;"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Zephyruston's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">探讨学习systemd服务管理</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">探讨学习systemd服务管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-11T12:04:47.000Z" title="Created 2025-09-11 20:04:47">2025-09-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-18T15:49:22.082Z" title="Updated 2025-11-18 23:49:22">2025-11-18</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="探讨学习-systemd-服务管理"><a href="#探讨学习-systemd-服务管理" class="headerlink" title="探讨学习 systemd 服务管理"></a>探讨学习 systemd 服务管理</h1><h2 id="核心就是三件事："><a href="#核心就是三件事：" class="headerlink" title="核心就是三件事："></a><strong>核心就是三件事：</strong></h2><ol>
+<li><strong>几个基础命令</strong> - <code>systemctl</code> 和 <code>journalctl</code></li>
+<li><strong>服务生命周期管理</strong> - 安装、启用、启动、停止、卸载</li>
+<li><strong>读懂和编写 .service 文件</strong> - 这是真正的精髓</li>
+</ol>
+<details>
+  <summary>重要习惯：当你创建新的单元文件或修改了任何单元文件后，必须让 systemd 重新加载其配置。</summary>
+
+<p>执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h2 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a><code>systemctl</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重新加载所有单元文件，使更改生效（不会重启正在运行的服务）</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动一个服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止一个服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl stop nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启一个服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># “优雅地”重新加载服务的配置（如果支持）</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl reload nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看服务的状态（非常重要！）</span></span><br><span class="line">systemctl status nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用服务，使其在开机时自动启动</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁用服务，取消开机自动启动</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查服务是否被设置为开机启动</span></span><br><span class="line">systemctl is-enabled nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户级别"><a href="#用户级别" class="headerlink" title="用户级别"></a>用户级别</h3><p>要使用用户级服务，需确保当前用户已启用<code>linger</code>模式。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在系统级别启用用户 linger</span></span><br><span class="line"><span class="built_in">sudo</span> loginctl enable-linger <span class="variable">$USER</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查状态</span></span><br><span class="line">loginctl show-user <span class="variable">$USER</span> | grep Linger</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新加载用户单元配置（修改 .service 文件后必须执行）</span></span><br><span class="line">systemctl --user daemon-reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动一个用户级服务</span></span><br><span class="line">systemctl --user start my-demo-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">systemctl --user stop my-demo-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看服务状态</span></span><br><span class="line">systemctl --user status my-demo-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置服务开机自启（需已启用 linger）</span></span><br><span class="line">systemctl --user <span class="built_in">enable</span> my-demo-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁用开机自启</span></span><br><span class="line">systemctl --user <span class="built_in">disable</span> my-demo-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否启用自启</span></span><br><span class="line">systemctl --user is-enabled my-demo-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有活跃的用户级服务</span></span><br><span class="line">systemctl --user list-units --<span class="built_in">type</span>=service --state=active</span><br></pre></td></tr></table></figure>
+
+<h2 id="journalctl"><a href="#journalctl" class="headerlink" title="journalctl"></a><code>journalctl</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 主要记录服务进程的启动、停止、重载等运行时状态变化，而不记录系统级的启用/禁用配置变更。</span></span><br><span class="line"><span class="comment"># 查看指定服务的所有日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实时跟踪（尾随）指定服务的最新日志（类似 tail -f）</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u nginx -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看从今天起的日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u nginx --since today</span><br></pre></td></tr></table></figure>
+
+<h2 id="服务生命周期"><a href="#服务生命周期" class="headerlink" title="服务生命周期"></a>服务生命周期</h2><ul>
+<li><p>“安装服务” &#x3D; 创建 .service 文件 + systemctl enable + start</p>
+</li>
+<li><p>“卸载服务” &#x3D; stop + systemctl disable + 删除文件</p>
+</li>
+</ul>
+<h2 id="service单元文件"><a href="#service单元文件" class="headerlink" title=".service单元文件"></a><code>.service</code>单元文件</h2><h3 id="单元文件的位置"><a href="#单元文件的位置" class="headerlink" title="单元文件的位置"></a>单元文件的位置</h3><ul>
+<li><code>/usr/lib/systemd/system/</code>：<strong>发行版预设的单元文件</strong>。</li>
+<li><code>/etc/systemd/system/</code>：<strong>系统管理员自定义的单元文件</strong>。当需要自定义时，应该将文件放在这里。</li>
+<li><code>~/.config/systemd/user/</code>：<strong>用户级自定义的单元文件</strong>。</li>
+</ul>
+<p><strong>优先级</strong>：<code>/etc/systemd/system/</code> 中的文件优先级高于 <code>/usr/lib/systemd/system/</code>。</p>
+<h3 id="单元文件的内容"><a href="#单元文件的内容" class="headerlink" title="单元文件的内容"></a>单元文件的内容</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line"># 这里描述单元的基本信息和依赖关系</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line"># 这里是服务本身的定义和配置，是最核心的部分</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line"># 这里定义如何&quot;安装&quot;这个服务（比如如何启用开机自启）</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://Zephyruston.github.io">Zephyruston</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://zephyruston.github.io/2025/09/11/%E6%8E%A2%E8%AE%A8%E5%AD%A6%E4%B9%A0systemd%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/">https://zephyruston.github.io/2025/09/11/%E6%8E%A2%E8%AE%A8%E5%AD%A6%E4%B9%A0systemd%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/" title="CLI才是AI助手的终极形态"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">CLI才是AI助手的终极形态</div></div><div class="info-2"><div class="info-item-1">CLI 才是 AI 助手的终极形态在当前的 AI 浪潮中，我们痴迷于构建“Agent”（智能体）。而构建 Agent 的主流方式是“MCP”（还是离不开 Function Calling 或 Tool Use）——我们煞费苦心地为 AI 定义一个个“工具”，告诉它这个函数叫什么、那个 API 需要什么参数。 我们都在玩这个游戏。我们为 AI 编写 search_google(query)、read_file(path)、write_file(path, content) 的工具定义（Schema）。 但如果我告诉你，对于“个人 AI 开发”这个场景，这套主流范式从一开始就错了呢？ 如果我告诉你，有一种方法，它的扩展性是无限的，学习成本是零，而且响应速度快如闪电。 这个方法就是：给你的 AI 助手 exec bash 的能力。 在个人开发环境中，基于 CLI (命令行) 的 AI 助手，在效率和能力上，将彻底碾压基于 MCP 的助手。 1. 真正的噩梦：MCP 的“扩展性天花板”让我们面对现实：MCP（或 Function...</div></div></div></a><a class="pagination-related" href="/2025/07/23/hexo%E6%B8%B2%E6%9F%93mermaid/" title="hexo渲染mermaid"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">hexo渲染mermaid</div></div><div class="info-2"><div class="info-item-1">hexo 渲染 mermaid(水一篇)我用的是 butterfly 主题 1. 安装插件1npm install --save hexo-filter-mermaid-diagrams  2. 配置在主题目录下的themes/butterfly/_config.yml中添加以下配置： 12345678mermaid:  enable: true  # Write Mermaid diagrams using code blocks  code_write: true  # built-in themes: default / forest / dark / neutral  theme:    light: default    dark: dark  在themes/butterfly/layout/includes/footer.pug末尾添加以下配置： 1234567891011if theme.mermaid &amp;&amp;...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zephyruston</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zephyruston"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">繁华如三千东流水,我只取一瓢爱了解</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A2%E8%AE%A8%E5%AD%A6%E4%B9%A0-systemd-%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">探讨学习 systemd 服务管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%B0%B1%E6%98%AF%E4%B8%89%E4%BB%B6%E4%BA%8B%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">核心就是三件事：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#systemctl"><span class="toc-number">1.2.</span> <span class="toc-text">systemctl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E5%88%AB"><span class="toc-number">1.2.1.</span> <span class="toc-text">用户级别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#journalctl"><span class="toc-number">1.3.</span> <span class="toc-text">journalctl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.4.</span> <span class="toc-text">服务生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#service%E5%8D%95%E5%85%83%E6%96%87%E4%BB%B6"><span class="toc-number">1.5.</span> <span class="toc-text">.service单元文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.5.1.</span> <span class="toc-text">单元文件的位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">1.5.2.</span> <span class="toc-text">单元文件的内容</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/24/wsl%E9%87%8C%E9%9D%A2%E5%B0%9D%E9%B2%9C%E5%90%84%E7%A7%8D%E5%8F%91%E8%A1%8C%E7%89%88/" title="wsl里面尝鲜各种发行版">wsl里面尝鲜各种发行版</a><time datetime="2025-11-24T05:20:33.000Z" title="Created 2025-11-24 13:20:33">2025-11-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/15/%E7%BB%99%E7%BB%88%E7%AB%AF%E9%85%8D%E7%BD%AEnerd-fonts/" title="给终端配置nerd-fonts">给终端配置nerd-fonts</a><time datetime="2025-11-15T07:23:09.000Z" title="Created 2025-11-15 15:23:09">2025-11-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/13/%E6%9C%AC%E5%9C%B0%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8https%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="本地快速启动https文件服务器">本地快速启动https文件服务器</a><time datetime="2025-11-13T12:52:08.000Z" title="Created 2025-11-13 20:52:08">2025-11-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/28/CLI%E6%89%8D%E6%98%AFAI%E5%8A%A9%E6%89%8B%E7%9A%84%E7%BB%88%E6%9E%81%E5%BD%A2%E6%80%81/" title="CLI才是AI助手的终极形态">CLI才是AI助手的终极形态</a><time datetime="2025-10-27T16:29:39.000Z" title="Created 2025-10-28 00:29:39">2025-10-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/11/%E6%8E%A2%E8%AE%A8%E5%AD%A6%E4%B9%A0systemd%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/" title="探讨学习systemd服务管理">探讨学习systemd服务管理</a><time datetime="2025-09-11T12:04:47.000Z" title="Created 2025-09-11 20:04:47">2025-09-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By Zephyruston</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><script src="https://unpkg.com/mermaid@11.5.0/dist/mermaid.min.js"></script><script>if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: '[object Object]',
+    securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+}</script></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
